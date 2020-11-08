@@ -17,7 +17,8 @@ class CoursesPage extends React.Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-    this.props.dispatch(courseActions.createCourse(this.state.course));
+    // this.props.dispatch(courseActions.createCourse(this.state.course));
+    this.props.createCourse(this.state.course);
   };
 
   render() {
@@ -41,7 +42,7 @@ class CoursesPage extends React.Component {
 
 CoursesPage.propTypes = {
   courses: PropTypes.array.isRequired,
-  dispatch: PropTypes.func.isRequired,
+  createCourse: PropTypes.func.isRequired,
 };
 
 function mapStateToProps(state) {
@@ -50,4 +51,10 @@ function mapStateToProps(state) {
   }; // be specific. pass only data your componenent to prevent unnecessary rerenders
 }
 
-export default connect(mapStateToProps)(CoursesPage); // connect pass automatically a dispatch in if mapDispatchToProps is omitted
+function mapDispatchToProps(dispatch) {
+  return {
+    createCourse: (course) => dispatch(courseActions.createCourse(course)),
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CoursesPage); // connect pass automatically a dispatch in if mapDispatchToProps is omitted
