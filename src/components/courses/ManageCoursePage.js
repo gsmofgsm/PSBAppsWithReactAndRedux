@@ -1,20 +1,20 @@
 import React from "react";
 import { connect } from "react-redux";
-import * as courseActions from "../../redux/actions/courseActions";
-import * as authorActions from "../../redux/actions/authorActions";
+import { loadCourses } from "../../redux/actions/courseActions";
+import { loadAuthors } from "../../redux/actions/authorActions";
 import PropTypes from "prop-types";
-import { bindActionCreators } from "redux";
 
 class ManageCoursePage extends React.Component {
   componentDidMount() {
-    if (this.props.courses.length === 0) {
-      this.props.actions.loadCourses().catch((error) => {
+    const { courses, authors, loadAuthors, loadCourses } = this.props;
+    if (courses.length === 0) {
+      loadCourses().catch((error) => {
         alert("Loading courses failed" + error);
       });
     }
 
-    if (this.props.authors.length === 0) {
-      this.props.actions.loadAuthors().catch((error) => {
+    if (authors.length === 0) {
+      loadAuthors().catch((error) => {
         alert("Loading authors failed" + error);
       });
     }
@@ -31,7 +31,8 @@ class ManageCoursePage extends React.Component {
 ManageCoursePage.propTypes = {
   courses: PropTypes.array.isRequired,
   authors: PropTypes.array.isRequired,
-  actions: PropTypes.object.isRequired,
+  loadAuthors: PropTypes.func.isRequired,
+  loadCourses: PropTypes.func.isRequired,
 };
 
 function mapStateToProps(state) {
@@ -45,14 +46,9 @@ function mapStateToProps(state) {
 //   createCourse: courseActions.createCourse,
 // };
 
-function mapDispatchToProps(dispatch) {
-  return {
-    // createCourse: (course) => dispatch(courseActions.createCourse(course)),
-    actions: {
-      loadCourses: bindActionCreators(courseActions.loadCourses, dispatch),
-      loadAuthors: bindActionCreators(authorActions.loadAuthors, dispatch),
-    },
-  };
-}
+const mapDispatchToProps = {
+  loadCourses,
+  loadAuthors,
+}; // function scope takes precedence over module scope
 
 export default connect(mapStateToProps, mapDispatchToProps)(ManageCoursePage); // connect pass automatically a dispatch in if mapDispatchToProps is omitted
